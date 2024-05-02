@@ -2,7 +2,7 @@
 sh env_setup.sh
 
 # Seed Postgres Database
-python manage.py seedTeams
+python manage.py seedTeams\
 python manage.py seedBoxScores
 
 # Run App
