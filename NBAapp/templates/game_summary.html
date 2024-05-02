@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    </head>
+    <body>
+        {% comment %} <h1>{{ team_name1 }} vs {{ team_name2 }}</h1>
+        <div>Load previous games....</div>
+        <div>Add chart to compare past spreads to this game....</div>
+        <div>Add chart to compare past totals to this game....</div>
+        <div>Use odds api to display players</div> {% endcomment %}
+
+        <div class="container">
+            <div class="text-center">
+                <h1>Game Summary: Celtics vs Heat</h1>
+            </div>
+
+            <div class="container rounded-3 mt-5" style="border: 1.5px; border-style:solid; border-color:LightGray; hover:background-color:LightGray;">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th style="width:33%;">Matchup</th>
+                            <th class="text-center" style="width:33%;">Spread</th>
+                            <th class="text-center"style="width:33%;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <td>
+                            <div class="p-1">Boston Celtics</div>
+                            <div class="p-1">@</div>
+                            <div class="p-1">Miami Heat</div>
+                        </td>
+                        <td>
+                            <div class="rounded-pill p-1 text-center" style="width: 50%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">+14</div>
+                            <div >&nbsp;</div>
+                            <div class="rounded-pill p-1 text-center" style="width: 50%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">-14</div>
+                        </td>
+                        <td>
+                            <div class="rounded-pill p-1 text-center" style="width: 50%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">0 200.5 </div>
+                            <div >&nbsp;</div>
+                            <div class="rounded-pill p-1 text-center" style="width: 50%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">U 200.5</div>
+                        </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="text-end">
+                    <p style="font-size:15px; color: black;">7:30pm EST</p>
+                </div>
+            </div>
+
+            <div class="mt-5"><b>Recent Games</b></div>
+            <div class="row">
+                <div class="col-md">
+                    <div class="container rounded-3 mt-3" style="border: 1.5px; border-style:solid; border-color:LightGray; hover:background-color:LightGray;">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="text-center border-bottom">Boston Celtics</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                Apr 30th vs Miami
+                                            </div>
+                                            <div class="col-sm-5" style="text-align:right;">
+                                                112 - 90
+                                            </div>
+                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: green; border-radius: 10px;">
+                                                W
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                Apr 29th vs Miami
+                                            </div>
+                                            <div class="col-sm-5" style="text-align:right;">
+                                                108 - 93
+                                            </div>
+                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: red; border-radius: 10px;">
+                                                L
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                Apr 28th vs Miami
+                                            </div>
+                                            <div class="col-sm-5" style="text-align:right;">
+                                                112 - 90
+                                            </div>
+                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: green; border-radius: 10px;">
+                                                W
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                Apr 27th vs Miami
+                                            </div>
+                                            <div class="col-sm-5" style="text-align:right;">
+                                                112 - 90
+                                            </div>
+                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: green; border-radius: 10px;">
+                                                W
+                                            </div>
+                                        </div>
+                                        
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="container rounded-3 mt-3" style="border: 1.5px; border-style:solid; border-color:LightGray; hover:background-color:LightGray;">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="text-center border-bottom">Miami Heat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                Apr 30th vs Celtics
+                                            </div>
+                                            <div class="col-sm-5" style="text-align:right;">
+                                                112 - 90
+                                            </div>
+                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: red; border-radius: 10px;">
+                                                L
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                Apr 29th vs Celtics
+                                            </div>
+                                            <div class="col-sm-5" style="text-align:right;">
+                                                108 - 93
+                                            </div>
+                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: green; border-radius: 10px;">
+                                                W
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                Apr 28th vs Celtics
+                                            </div>
+                                            <div class="col-sm-5" style="text-align:right;">
+                                                112 - 90
+                                            </div>
+                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: red; border-radius: 10px;">
+                                                L
+                                            </div>
+                                        </div>
+
+                                        <div class="row pt-1">
+                                            <div class="col-sm-6">
+                                                Apr 27th vs Celtics
+                                            </div>
+                                            <div class="col-sm-5" style="text-align:right;">
+                                                112 - 90
+                                            </div>
+                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: red; border-radius: 10px;">
+                                                L
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {% comment %} Add bar chart here with drop down to change based on team{% endcomment %}
+            {% comment %} Add drop down to change chart based on spread and total {% endcomment %}
+
+        </div>
+    </body>
+</html>

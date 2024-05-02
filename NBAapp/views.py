@@ -43,9 +43,9 @@ def index(request):
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
 
-def game_preview(request):
+def game_summary(request):
 
     #context = {"team_name1" : team_name1,
     #           "team_name2" : team_name2}
     
-    return render(request, 'game_preview.html')
+    return render(request, 'game_summary.html')

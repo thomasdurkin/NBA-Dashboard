@@ -20,5 +20,5 @@ from NBAapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('game_preview', views.game_preview, name='game_preview')
+    path('game_summary', views.game_summary, name='game_summary')
 ]
