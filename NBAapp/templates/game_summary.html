@@ -11,7 +11,7 @@
         <div>Use odds api to display players</div> {% endcomment %}
 
         <div class="container">
-            <div class="text-center">
+            <div class="text-center pt-5">
                 <h1>Game Summary: Celtics vs Heat</h1>
             </div>
 
@@ -186,6 +186,88 @@
             {% comment %} Add bar chart here with drop down to change based on team{% endcomment %}
             {% comment %} Add drop down to change chart based on spread and total {% endcomment %}
 
+            <div class="row mt-5">
+                <div class="col-md">
+                    <div class="container rounded-3 mt-3" style="border: 1.5px; border-style:solid; border-color:LightGray; hover:background-color:LightGray;">
+                        <h1>CHART HERE</h1>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="container rounded-3 mt-3" style="border: 1.5px; border-style:solid; border-color:LightGray; hover:background-color:LightGray;">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="text-center border-bottom">Player Props</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'player_props' %}">
+                                            <div class="row pt-1 player">
+                                                Jayson Tatum
+                                            </div>    
+                                        </a>
+        
+                                        <a href="{% url 'player_props' %}">
+                                            <div class="row pt-1 player">
+                                                Jaylen Brown
+                                            </div>    
+                                        </a>
+
+                                        <a href="{% url 'player_props' %}">
+                                            <div class="row pt-1 player">
+                                                Derrick White
+                                            </div>    
+                                        </a>
+
+                                        <a href="{% url 'player_props' %}">
+                                            <div class="row pt-1 player">
+                                                Jrue Holiday
+                                            </div>    
+                                        </a>
+
+                                        <a href="{% url 'player_props' %}">
+                                            <div class="row pt-1 player">
+                                                Al Horford
+                                            </div>    
+                                        </a>
+
+                                        <a href="{% url 'player_props' %}">
+                                            <div class="row pt-1 player">
+                                                Donovan Mitchell
+                                            </div>    
+                                        </a> 
+
+                                        <a href="{% url 'player_props' %}">
+                                            <div class="row pt-1 player">
+                                                Darius Garland
+                                            </div>    
+                                        </a> 
+
+                                        <a href="{% url 'player_props' %}">
+                                            <div class="row pt-1 player">
+                                                Evan Mobley
+                                            </div>    
+                                        </a> 
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
+
+     <style>
+         .player:hover{
+            background-color:#E9E8E8;
+         }
+
+         a{
+            text-decoration:none;
+            color:black;
+         }
+    </style>
 </html>

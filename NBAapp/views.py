@@ -49,3 +49,7 @@ def game_summary(request):
     #           "team_name2" : team_name2}
     
     return render(request, 'game_summary.html')
+
+def player_props(request):
+
+    return render(request, 'player_props.html')
