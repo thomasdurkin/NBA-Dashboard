@@ -1,8 +1,6 @@
 from django.shortcuts import render
-from .models import BoxScore
-
-from bs4 import BeautifulSoup, Comment
-from datetime import datetime
+from .models import GameOdds, Team
+from datetime import datetime, timedelta, timezone
 
 import requests
 import pandas as pd
@@ -10,37 +8,97 @@ import pandas as pd
 # Create your views here.
 def index(request):
 
-    #Load dummy data for now need to change to fanduel today's games
-    games = BoxScore.objects.all()
-    context = {"games": games}
+    today = datetime.today()
+    tomorrow = today + timedelta(days=1)
 
-    #date = datetime.today()
-    #date = date.strftime("%Y%m%d")
-    #link = f"https://www.espn.com/nba/schedule/_/date/{date}"
+    today = today.strftime("%Y-%m-%dT00:00:00Z")
+    tomorrow = tomorrow.strftime("%Y-%m-%dT04:00:00Z")
 
-    #headers = requests.utils.default_headers()
-    #headers.update({
-    #    'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0',
-    #})
+    todays_games = GameOdds.objects.filter(date_time__range=(today, tomorrow))
+    todays_games_cnt = todays_games.count()
+    context = {"games" : todays_games}
 
-    #page = requests.get(link, headers=headers)
-    #soup = BeautifulSoup(page.content, "html.parser")
+    games = []
+    if todays_games_cnt == 0:
+        resp = requests.get("https://api.the-odds-api.com/v4/sports/basketball_nba/odds",
+                        params={
+                            "api_key" : "18d4f5a57823e4304f11070456e9b30e",
+                            "regions" : "us",
+                            "markets" : "h2h,spreads,totals",
+                            "oddsFormat" : "american",
+                            "dateFormat" : "iso",
+                            "bookmakers" : "fanduel",
+                            "commenceTimeFrom" : today,
+                            "commenceTimeTo" : tomorrow
+                        })
+        
+        if resp.status_code != 200:
+            print(f'Failed to get odds: status_code {resp.status_code}, response body {resp.text}')
 
-    #todays_games = soup.find("div", class_ = "ScheduleTables").find("tbody")
+        else:
+            odds_json = resp.json()
+            #print('Number of events:', len(odds_json))
+            # Check the usage quota
+            #print('Remaining requests', resp.headers['x-requests-remaining'])
+            #print('Used requests', resp.headers['x-requests-used'])
 
-    #data = []
-    #rows = todays_games.find_all('tr')
-    #for row in rows:
-    #    cols = row.find_all('span')
-    #    game = []
-    #    for col in cols:
-    #        col = col.text.strip()
-    #        if col != "@":
-    #            game.append(col)
-    #    data.append(game)
-  
+            est_offset = timedelta(hours=-4)
+            original_timezone = timezone.utc
 
-    # Render the HTML template index.html with the data in the context variable
+            for json in odds_json:
+                home_team = json['home_team']
+                away_team = json['away_team']
+                date_time = datetime.fromisoformat(json['commence_time']).astimezone(original_timezone) + est_offset
+                bm = json['bookmakers']
+
+                # Will need to change [0] if more sports books are added
+                bookmaker = bm[0]['title']
+                markets = bm[0]['markets']
+
+                for m in markets:
+                    key = m['key']
+                    for team in m['outcomes']:
+                        if team['name'] == home_team:
+                            if key == 'h2h':
+                                home_h2h_price = team['price']
+                            elif key == 'spreads':
+                                home_spread_price = team['price']
+                                home_spread_point = team['point']
+                        elif team['name'] == away_team:
+                            if key == 'h2h':
+                                away_h2h_price = team['price']
+                            elif key == 'spreads':
+                                away_spread_price = team['price']
+                                away_spread_point = team['point']
+                        elif team['name'] == "Over":
+                            over_price = team['price']
+                            over_point = team['point']
+                        else:
+                            under_price = team['price']
+                            under_point = team['point']
+                
+                home_team = Team.objects.get(team_name = home_team)
+                away_team = Team.objects.get(team_name = away_team)
+
+                gameOddsObj = GameOdds(date_time = date_time,
+                                        home_team = home_team,
+                                        away_team = away_team,
+                                        home_h2h_price = home_h2h_price,
+                                        home_spread_price = home_spread_price,
+                                        home_spread_point = home_spread_point,
+                                        away_h2h_price = away_h2h_price,
+                                        away_spread_price = away_spread_price,
+                                        away_spread_point = away_spread_point,
+                                        over_price = over_price,
+                                        over_point = over_point,
+                                        under_price = under_price,
+                                        under_point =  under_point)
+                gameOddsObj.save()
+                games.append(gameOddsObj)
+        context["games"] = games
+    else:
+        context["games"] = todays_games
+
     return render(request, 'index.html', context=context)
 
 def game_summary(request):
