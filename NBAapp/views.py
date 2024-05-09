@@ -101,12 +101,10 @@ def index(request):
 
     return render(request, 'index.html', context=context)
 
-def game_summary(request):
-
-    #context = {"team_name1" : team_name1,
-    #           "team_name2" : team_name2}
-    
-    return render(request, 'game_summary.html')
+def game_summary(request, id):
+    game = GameOdds.objects.get(id = id)
+    context = {"game" : game}
+    return render(request, 'game_summary.html', context=context)
 
 def player_props(request):
 

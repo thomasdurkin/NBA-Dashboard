@@ -12,7 +12,7 @@
 
         <div class="container">
             <div class="text-center pt-5">
-                <h1>Game Summary: Celtics vs Heat</h1>
+                <h1>Game Summary: {{ game.home_team.team_name }} vs {{ game.away_team.team_name }}</h1>
             </div>
 
             <div class="container rounded-3 mt-5" style="border: 1.5px; border-style:solid; border-color:LightGray; hover:background-color:LightGray;">
@@ -27,26 +27,26 @@
                     <tbody>
                         <tr>
                         <td>
-                            <div class="p-1">Boston Celtics</div>
+                            <div class="p-1">{{ game.home_team.team_name }}</div>
                             <div class="p-1">@</div>
-                            <div class="p-1">Miami Heat</div>
+                            <div class="p-1">{{ game.away_team.team_name }}</div>
                         </td>
                         <td>
-                            <div class="rounded-pill p-1 text-center" style="width: 50%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">+14</div>
+                            <div class="rounded-pill p-1 text-center" style="width: 50%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">{{ game.home_spread_point }}</div>
                             <div >&nbsp;</div>
-                            <div class="rounded-pill p-1 text-center" style="width: 50%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">-14</div>
+                            <div class="rounded-pill p-1 text-center" style="width: 50%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">{{ game.away_spread_point }}</div>
                         </td>
                         <td>
-                            <div class="rounded-pill p-1 text-center" style="width: 50%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">0 200.5 </div>
+                            <div class="rounded-pill p-1 text-center" style="width: 50%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">0 {{ game.over_point }}</div>
                             <div >&nbsp;</div>
-                            <div class="rounded-pill p-1 text-center" style="width: 50%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">U 200.5</div>
+                            <div class="rounded-pill p-1 text-center" style="width: 50%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">U {{ game.under_point }}</div>
                         </td>
                         </tr>
                     </tbody>
                 </table>
 
                 <div class="text-end">
-                    <p style="font-size:15px; color: black;">7:30pm EST</p>
+                    <p style="font-size:15px; color: black;">{{ game.date_time }}</p>
                 </div>
             </div>
 
