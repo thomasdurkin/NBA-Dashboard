@@ -8,7 +8,7 @@ class Team(models.Model):
         return self.team_name
 
 class BoxScore(models.Model):
-    date = models.DateTimeField()
+    date = models.DateField()
 
     team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team1")
     team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team2")

@@ -4,14 +4,14 @@ from bs4 import BeautifulSoup, Comment
 
 import requests
 import pandas as pd
-
+import time
 
 class Command(BaseCommand):
     help = "Seed Box Scores Table"
 
 
     def handle(self, *args, **options):
-        dates = pd.date_range(start = "2024-04-30", end = "2024-04-30")
+        dates = pd.date_range(start = "2024-01-01", end = "2024-05-09")
         base_link = "https://www.basketball-reference.com"
 
         for date in dates:
@@ -29,19 +29,20 @@ class Command(BaseCommand):
 
                     # Access boxscore
                     page = requests.get(base_link + boxscore_link)
+                    time.sleep(2)
                     soup = BeautifulSoup(page.content, "html.parser")
+
+                    teams = soup.find("div", class_="scorebox").find_all("strong")
+                    team1_text = teams[0].text.strip()
+                    team2_text = teams[1].text.strip()
+                    team1 = Team.objects.get(team_name = team1_text)
+                    team2 = Team.objects.get(team_name = team2_text)
+                       
 
                     # Line Score data is stored in comments so this is a work around
                     comment = soup.find("div", id = 'all_line_score').find(string=lambda text: isinstance(text, Comment))
                     if "div_line_score" in comment:
                         line_score = BeautifulSoup(comment.string, "html.parser")
-
-                        teams = line_score.find_all("a")
-                        team1_text = teams[0].text.strip()
-                        team2_text = teams[1].text.strip()
-                        team1 = Team.objects.get(team_abbr = team1_text)
-                        team2 = Team.objects.get(team_abbr = team2_text)
-                       
 
                         data = line_score.find('tbody').find_all("td")
                         team1_q1_points = int(data[0].text.strip())
@@ -74,7 +75,7 @@ class Command(BaseCommand):
                         team2_ft_per_fg = float(data[10].text.strip())
                         team2_off_rtg = float(data[11].text.strip())   
                     
-                    box_score = BoxScore(date=date.strftime('%Y-%m-%d'),
+                    box_score = BoxScore(date=date,
                                          team1 = team1,
                                          team2 = team2,
                                          team1_q1_points = team1_q1_points,
@@ -98,9 +99,10 @@ class Command(BaseCommand):
                                          team2_ft_per_fg = team2_ft_per_fg,
                                          team2_off_rtg = team2_off_rtg)
                     box_score.save()
-                    print(f"BOX SCORE FOR {team1_text} vs {team2_text} for {date.month}-{date.day}-{date.year} ADDED!")
+                    print(f"BOX SCORE FOR {team1_text} vs {team2_text} ON {date.month}-{date.day}-{date.year} ADDED!")
             except Exception as e:
-                print(e)
+                print(f"NO GAMES PLAYED ON {date.month}-{date.day}-{date.year}.")
+                time.sleep(2)
 
     
             
