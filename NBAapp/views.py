@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from .models import GameOdds, Team
+from django.db.models import Q
+from .models import GameOdds, Team, BoxScore
 from datetime import datetime, timedelta, timezone
 
 import requests
@@ -103,7 +104,17 @@ def index(request):
 
 def game_summary(request, id):
     game = GameOdds.objects.get(id = id)
-    context = {"game" : game}
+
+    home_team_recent = BoxScore.objects.filter(Q(team1=game.home_team) | Q(team2=game.home_team))\
+                                        .order_by('-date')[:5]
+    
+    away_team_recent = BoxScore.objects.filter(Q(team1=game.away_team) | Q(team2=game.away_team))\
+                                        .order_by('-date')[:5]
+    
+    context = {"game" : game,
+               "home_team_recent" : home_team_recent,
+               "away_team_recent" : away_team_recent}
+
     return render(request, 'game_summary.html', context=context)
 
 def player_props(request):

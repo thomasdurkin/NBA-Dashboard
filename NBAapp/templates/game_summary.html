@@ -57,60 +57,44 @@
                         <table class="table table-borderless">
                             <thead>
                                 <tr>
-                                    <th class="text-center border-bottom">Boston Celtics</th>
+                                    <th class="text-center border-bottom">{{ game.away_team.team_name }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
+                                        {% for rg in away_team_recent %}
                                         <div class="row pt-1">
                                             <div class="col-sm-6">
-                                                Apr 30th vs Miami
+                                                {% if rg.team1.team_name == game.away_team.team_name %}
+                                                    {{ rg.date }} vs {{ rg.team2.team_abbr }}
+                                                {% else %}
+                                                    {{ rg.date }} vs {{ rg.team1.team_abbr }}
+                                                {% endif %}
                                             </div>
                                             <div class="col-sm-5" style="text-align:right;">
-                                                112 - 90
+                                                {{ rg.team1_total }} - {{ rg.team2_total }}
                                             </div>
-                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: green; border-radius: 10px;">
-                                                W
-                                            </div>
-                                        </div>
 
-                                        <div class="row pt-1">
-                                            <div class="col-sm-6">
-                                                Apr 29th vs Miami
-                                            </div>
-                                            <div class="col-sm-5" style="text-align:right;">
-                                                108 - 93
-                                            </div>
-                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: red; border-radius: 10px;">
-                                                L
-                                            </div>
+                                            {% if rg.team1.team_name == game.away_team.team_name and rg.team1_total > rg.team2_total %}
+                                                <div class="col-sm-1" style="text-align:center; color: white; background-color: green; border-radius: 10px;">
+                                                    W
+                                                </div>
+                                            {% elif rg.team2.team_name == game.away_team.team_name and rg.team1_total < rg.team2_total%}
+                                                <div class="col-sm-1" style="text-align:center; color: white; background-color: green; border-radius: 10px;">
+                                                    W
+                                                </div>
+                                            {% elif rg.team1.team_name == game.away_team.team_name and rg.team1_total < rg.team2_total %}
+                                                <div class="col-sm-1" style="text-align:center; color: white; background-color: red; border-radius: 10px;">
+                                                    L
+                                                </div>
+                                            {% else %}
+                                                <div class="col-sm-1" style="text-align:center; color: white; background-color: red; border-radius: 10px;">
+                                                    L
+                                                </div>
+                                            {% endif %}
                                         </div>
-
-                                        <div class="row pt-1">
-                                            <div class="col-sm-6">
-                                                Apr 28th vs Miami
-                                            </div>
-                                            <div class="col-sm-5" style="text-align:right;">
-                                                112 - 90
-                                            </div>
-                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: green; border-radius: 10px;">
-                                                W
-                                            </div>
-                                        </div>
-
-                                        <div class="row pt-1">
-                                            <div class="col-sm-6">
-                                                Apr 27th vs Miami
-                                            </div>
-                                            <div class="col-sm-5" style="text-align:right;">
-                                                112 - 90
-                                            </div>
-                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: green; border-radius: 10px;">
-                                                W
-                                            </div>
-                                        </div>
-                                        
+                                        {% endfor %}
                                     </td>
                                 </tr>
                             </tbody>
@@ -122,59 +106,45 @@
                         <table class="table table-borderless">
                             <thead>
                                 <tr>
-                                    <th class="text-center border-bottom">Miami Heat</th>
+                                    <th class="text-center border-bottom">{{ game.home_team.team_name }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
+                                        {% for rg in home_team_recent %}
                                         <div class="row pt-1">
                                             <div class="col-sm-6">
-                                                Apr 30th vs Celtics
+                                                {% if rg.team1.team_name == game.home_team.team_name %}
+                                                    {{ rg.date }} vs {{ rg.team2.team_abbr }}
+                                                {% else %}
+                                                    {{ rg.date }} vs {{ rg.team1.team_abbr }}
+                                                {% endif %}
                                             </div>
                                             <div class="col-sm-5" style="text-align:right;">
-                                                112 - 90
+                                                {{ rg.team1_total }} - {{ rg.team2_total }}
                                             </div>
-                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: red; border-radius: 10px;">
-                                                L
-                                            </div>
+
+                                            {% if rg.team1.team_name == game.home_team.team_name and rg.team1_total > rg.team2_total %}
+                                                <div class="col-sm-1" style="text-align:center; color: white; background-color: green; border-radius: 10px;">
+                                                    W
+                                                </div>
+                                            {% elif rg.team2.team_name == game.home_team.team_name and rg.team1_total < rg.team2_total%}
+                                                <div class="col-sm-1" style="text-align:center; color: white; background-color: green; border-radius: 10px;">
+                                                    W
+                                                </div>
+                                            {% elif rg.team1.team_name == game.home_team.team_name and rg.team1_total < rg.team2_total %}
+                                                <div class="col-sm-1" style="text-align:center; color: white; background-color: red; border-radius: 10px;">
+                                                    L
+                                                </div>
+                                            {% else %}
+                                                <div class="col-sm-1" style="text-align:center; color: white; background-color: red; border-radius: 10px;">
+                                                    L
+                                                </div>
+                                            {% endif %}
                                         </div>
 
-                                        <div class="row pt-1">
-                                            <div class="col-sm-6">
-                                                Apr 29th vs Celtics
-                                            </div>
-                                            <div class="col-sm-5" style="text-align:right;">
-                                                108 - 93
-                                            </div>
-                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: green; border-radius: 10px;">
-                                                W
-                                            </div>
-                                        </div>
-
-                                        <div class="row pt-1">
-                                            <div class="col-sm-6">
-                                                Apr 28th vs Celtics
-                                            </div>
-                                            <div class="col-sm-5" style="text-align:right;">
-                                                112 - 90
-                                            </div>
-                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: red; border-radius: 10px;">
-                                                L
-                                            </div>
-                                        </div>
-
-                                        <div class="row pt-1">
-                                            <div class="col-sm-6">
-                                                Apr 27th vs Celtics
-                                            </div>
-                                            <div class="col-sm-5" style="text-align:right;">
-                                                112 - 90
-                                            </div>
-                                            <div class="col-sm-1" style="text-align:center; color: white; background-color: red; border-radius: 10px;">
-                                                L
-                                            </div>
-                                        </div>
+                                        {% endfor %}
                                     </td>
                                 </tr>
                             </tbody>
