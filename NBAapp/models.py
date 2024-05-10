@@ -17,11 +17,13 @@ class BoxScore(models.Model):
     team1_q2_points = models.IntegerField()
     team1_q3_points = models.IntegerField()
     team1_q4_points = models.IntegerField()
+    team1_total = models.IntegerField()
 
     team2_q1_points = models.IntegerField()
     team2_q2_points = models.IntegerField()
     team2_q3_points = models.IntegerField()
     team2_q4_points = models.IntegerField()
+    team2_total = models.IntegerField()
 
     team1_pace = models.FloatField()
     team1_efg = models.FloatField()

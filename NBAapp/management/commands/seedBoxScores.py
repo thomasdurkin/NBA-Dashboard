@@ -45,15 +45,18 @@ class Command(BaseCommand):
                         line_score = BeautifulSoup(comment.string, "html.parser")
 
                         data = line_score.find('tbody').find_all("td")
+
                         team1_q1_points = int(data[0].text.strip())
                         team1_q2_points = int(data[1].text.strip())
                         team1_q3_points = int(data[2].text.strip())
                         team1_q4_points = int(data[3].text.strip())
+                        team1_total = int(data[4].text.strip())
 
-                        team2_q1_points = int(data[4].text.strip())
-                        team2_q2_points = int(data[5].text.strip())
-                        team2_q3_points = int(data[6].text.strip())
-                        team2_q4_points = int(data[7].text.strip())
+                        team2_q1_points = int(data[5].text.strip())
+                        team2_q2_points = int(data[6].text.strip())
+                        team2_q3_points = int(data[7].text.strip())
+                        team2_q4_points = int(data[8].text.strip())
+                        team2_total = int(data[9].text.strip())
 
                     # Four Factors data is stored in comments
                     comment = soup.find("div", id = 'all_four_factors').find(string=lambda text: isinstance(text, Comment))
@@ -82,10 +85,12 @@ class Command(BaseCommand):
                                          team1_q2_points = team1_q2_points,
                                          team1_q3_points = team1_q3_points,
                                          team1_q4_points = team1_q4_points,
+                                         team1_total = team1_total,
                                          team2_q1_points = team2_q1_points,
                                          team2_q2_points = team2_q2_points,
                                          team2_q3_points = team2_q3_points,
                                          team2_q4_points = team2_q4_points,
+                                         team2_total = team2_total,
                                          team1_pace = team1_pace,
                                          team1_efg = team1_efg,
                                          team1_tov = team1_tov,
