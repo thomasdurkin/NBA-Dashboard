@@ -46,7 +46,7 @@
                 </table>
 
                 <div class="text-end">
-                    <p style="font-size:15px; color: black;">{{ game.date_time }}</p>
+                    <p style="font-size:15px; color: black;">{{ game.date_time | date:"g:i a"}} EST</p>
                 </div>
             </div>
 
@@ -67,9 +67,9 @@
                                         <div class="row pt-1">
                                             <div class="col-sm-6">
                                                 {% if rg.team1.team_name == game.away_team.team_name %}
-                                                    {{ rg.date }} vs {{ rg.team2.team_abbr }}
+                                                    {{ rg.date | date:"n/d/Y" }} vs {{ rg.team2.team_abbr }}
                                                 {% else %}
-                                                    {{ rg.date }} vs {{ rg.team1.team_abbr }}
+                                                    {{ rg.date | date:"n/d/Y" }} vs {{ rg.team1.team_abbr }}
                                                 {% endif %}
                                             </div>
                                             <div class="col-sm-5" style="text-align:right;">
@@ -116,9 +116,9 @@
                                         <div class="row pt-1">
                                             <div class="col-sm-6">
                                                 {% if rg.team1.team_name == game.home_team.team_name %}
-                                                    {{ rg.date }} vs {{ rg.team2.team_abbr }}
+                                                    {{ rg.date | date:"n/d/Y" }} vs {{ rg.team2.team_abbr }}
                                                 {% else %}
-                                                    {{ rg.date }} vs {{ rg.team1.team_abbr }}
+                                                    {{ rg.date | date:"n/d/Y" }} vs {{ rg.team1.team_abbr }}
                                                 {% endif %}
                                             </div>
                                             <div class="col-sm-5" style="text-align:right;">
