@@ -12,6 +12,6 @@ else
 
   echo "installing base packages"
   conda create --name $input_variable\
-  python Django psycopg2-binary beautifulsoup4 requests pandas
+  python Django psycopg2-binary beautifulsoup4 requests pandas unidecode
   echo "to exit: source deactivate"
 fi

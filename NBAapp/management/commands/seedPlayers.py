@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 
 import requests
 import time
+from unidecode import unidecode
 
 
 class Command(BaseCommand):
@@ -45,7 +46,7 @@ class Command(BaseCommand):
                     cols = row.find_all('td')
 
                     if (cols != []):
-                        name = cols[0].text.strip().replace("\xa0\xa0", "")
+                        name = unidecode(cols[0].text.strip().replace("\xa0\xa0", ""))
                         position = cols[1].text.strip()
 
                         #Check for two way player identifier

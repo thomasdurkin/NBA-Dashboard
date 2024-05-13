@@ -67,5 +67,15 @@ class Player(models.Model):
     position = models.CharField(max_length=2)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
 
+class PlayerOdds(models.Model):
+    game = models.ForeignKey(GameOdds, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    
+    date_time = models.DateTimeField()
+    prop = models.CharField(max_length=40)
+    over_under = models.CharField(max_length=5)
+    price = models.IntegerField()
+    point = models.IntegerField()
+
 
 

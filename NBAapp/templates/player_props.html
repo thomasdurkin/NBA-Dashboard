@@ -20,35 +20,15 @@
                     </div>
                 </div>
 
-                <a href="{% url 'player_props_summary' %}">
-                    <div class="row player p-2 border-bottom" style="background-color: White">
-                        Jason Tatum
-                    </div>
-                </a>
-
-                <a href="{% url 'player_props_summary' %}">
-                    <div class="row player p-2 border-bottom" style="background-color: White">
-                        Luka Doncic
-                    </div>
-                </a>
-
-                <a href="{% url 'player_props_summary' %}">
-                    <div class="row player p-2 border-bottom" style="background-color: White">
-                        Donovan Mitchell
-                    </div>
-                </a>
-
-                <a href="{% url 'player_props_summary' %}">
-                    <div class="row player p-2 border-bottom" style="background-color: White">
-                        Kyrie Irving
-                    </div>
-                </a>
-
-                <a href="{% url 'player_props_summary' %}">
-                    <div class="row player p-2 border-bottom" style="background-color: White">
-                        Jaylen Brown
-                    </div>
-                </a>
+                {% for po in player_odds %}
+                    {% if po.game.id == game.id %}
+                    <a href="{% url 'player_props_summary' po.id %}">
+                        <div class="row player p-2 border-bottom" style="background-color: White">
+                            {{ po.player.player_name }}
+                        </div>
+                    </a>
+                    {% endif %}
+                {% endfor %}
             </div>
             {% endfor %}
         </div>       
