@@ -41,6 +41,7 @@ class BoxScore(models.Model):
 
 
 class GameOdds(models.Model):
+    id = models.UUIDField(primary_key=True)
     date_time = models.DateTimeField()
 
     home_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_team")
