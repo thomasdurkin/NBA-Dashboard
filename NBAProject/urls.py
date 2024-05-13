@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('game_summary/<int:id>', views.game_summary, name='game_summary'),
-    path('player_props', views.player_props, name='player_props')
+    path('player_props', views.player_props, name='player_props'),
+    path('player_props_summary', views.player_props_summary, name='player_props_summary')
 ]

@@ -117,6 +117,19 @@ def game_summary(request, id):
 
     return render(request, 'game_summary.html', context=context)
 
-def player_props(request):
 
-    return render(request, 'player_props.html')
+def player_props(request):
+    today = datetime.today()
+    tomorrow = today + timedelta(days=1)
+
+    today = today.strftime("%Y-%m-%dT00:00:00Z")
+    tomorrow = tomorrow.strftime("%Y-%m-%dT04:00:00Z")
+
+    todays_games = GameOdds.objects.filter(date_time__range=(today, tomorrow))
+    context = {"games" : todays_games}
+
+    return render(request, 'player_props.html', context=context)
+
+def player_props_summary(request):
+
+    return render(request, 'player_props_summary.html')
