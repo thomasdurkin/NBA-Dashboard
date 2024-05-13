@@ -61,7 +61,11 @@ class GameOdds(models.Model):
     under_price = models.IntegerField()
     under_point = models.FloatField()
 
-
+class Player(models.Model):
+    player_name = models.CharField(max_length=30)
+    number = models.IntegerField()
+    position = models.CharField(max_length=2)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
 
 
 
