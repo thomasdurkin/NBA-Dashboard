@@ -128,11 +128,11 @@ def player_props(request):
 
     todays_games = GameOdds.objects.filter(date_time__range=(today, tomorrow))
 
-    todays_player_odds = PlayerOdds.objects.filter(date_time__range=(today, tomorrow)).all().distinct('player')
+    todays_player_odds = PlayerOdds.objects.filter(Q(date_time__range=(today, tomorrow)) & Q(over_under="over"))
     todays_player_odds_cnt = todays_player_odds.count()
 
     context = {"games" : todays_games}
-    player_odds = []
+
     if todays_player_odds_cnt == 0:
         player_odds = []
         for game in todays_games:
@@ -170,60 +170,65 @@ def player_props(request):
                             else:
                                 players[o['description']]["under"][m['key']] = (o['price'], o['point']) 
 
-                for player, v in players.items():
-                    obj = PlayerOdds()  
-                    obj.player = Player.objects.filter(player_name__contains = player).first()
-                    obj.date_time = odds_json['commence_time']
-                    obj.last_update = datetime.fromisoformat(str(v['last_update'])).astimezone(original_timezone) + est_offset
-                    obj.game = game
+                for player, v in players.items(): 
+                    player = Player.objects.filter(player_name__contains = player).first()
 
                     for over_under, over_under_v in v.items():
-                        if over_under == "over":
-                            obj.over_under = "over"
-                            for prop, prop_v in over_under_v.items():
-                                if (prop == "player_points"):
-                                    obj.points_price = prop_v[0]
-                                    obj.points_point = prop_v[1]
-                                elif (prop == "player_rebounds"):
-                                    obj.rebounds_price = prop_v[0]
-                                    obj.rebounds_point = prop_v[1]
-                                elif (prop == "player_assists"):
-                                    obj.assists_price = prop_v[0]
-                                    obj.assists_point = prop_v[1]
-                                elif (prop == "player_threes"):
-                                    obj.threes_price = prop_v[0]
-                                    obj.threes_point = prop_v[1]
-                                elif (prop == "player_points_assists"):
-                                    obj.points_assists_price = prop_v[0]
-                                    obj.points_assists_point = prop_v[1]
-                                elif (prop == "player_points_rebounds_assists"):
-                                    obj.points_rebounds_assists_price = prop_v[0]
-                                    obj.points_rebounds_assists_point = prop_v[1]
-                        if over_under == "under": 
-                            obj.over_under = "under"
-                            for prop, prop_v in over_under_v.items():
-                                if (prop == "player_points"):
-                                    obj.points_price = prop_v[0]
-                                    obj.points_point = prop_v[1]
-                                elif (prop == "player_rebounds"):
-                                    obj.rebounds_price = prop_v[0]
-                                    obj.rebounds_point = prop_v[1]
-                                elif (prop == "player_assists"):
-                                    obj.assists_price = prop_v[0]
-                                    obj.assists_point = prop_v[1]
-                                elif (prop == "player_threes"):
-                                    obj.threes_price = prop_v[0]
-                                    obj.threes_point = prop_v[1]
-                                elif (prop == "player_points_assists"):
-                                    obj.points_assists_price = prop_v[0]
-                                    obj.points_assists_point = prop_v[1]
-                                elif (prop == "player_points_rebounds_assists"):
-                                    obj.points_rebounds_assists_price = prop_v[0]
-                                    obj.points_rebounds_assists_point = prop_v[1]
+                        if over_under in ['over', 'under']:
+                            obj = PlayerOdds() 
+                            obj.player = player
+                            obj.date_time = odds_json['commence_time']
+                            obj.last_update = datetime.fromisoformat(str(v['last_update'])).astimezone(original_timezone) + est_offset
+                            obj.game = game
 
-                        obj.save()
-                        player_odds.append(obj)
-        context["player_odds"] = players
+                            if over_under == "over":
+                                obj.over_under = "over"
+                                for prop, prop_v in over_under_v.items():
+                                    if (prop == "player_points"):
+                                        obj.points_price = prop_v[0]
+                                        obj.points_point = prop_v[1]
+                                    elif (prop == "player_rebounds"):
+                                        obj.rebounds_price = prop_v[0]
+                                        obj.rebounds_point = prop_v[1]
+                                    elif (prop == "player_assists"):
+                                        obj.assists_price = prop_v[0]
+                                        obj.assists_point = prop_v[1]
+                                    elif (prop == "player_threes"):
+                                        obj.threes_price = prop_v[0]
+                                        obj.threes_point = prop_v[1]
+                                    elif (prop == "player_points_assists"):
+                                        obj.points_assists_price = prop_v[0]
+                                        obj.points_assists_point = prop_v[1]
+                                    elif (prop == "player_points_rebounds_assists"):
+                                        obj.points_rebounds_assists_price = prop_v[0]
+                                        obj.points_rebounds_assists_point = prop_v[1]
+                                player_odds.append(obj)
+
+                            if over_under == "under": 
+                                obj.over_under = "under"
+                                print("HEREEEEEEEEE")
+                                for prop, prop_v in over_under_v.items():
+                                    if (prop == "player_points"):
+                                        obj.points_price = prop_v[0]
+                                        obj.points_point = prop_v[1]
+                                    elif (prop == "player_rebounds"):
+                                        obj.rebounds_price = prop_v[0]
+                                        obj.rebounds_point = prop_v[1]
+                                    elif (prop == "player_assists"):
+                                        obj.assists_price = prop_v[0]
+                                        obj.assists_point = prop_v[1]
+                                    elif (prop == "player_threes"):
+                                        obj.threes_price = prop_v[0]
+                                        obj.threes_point = prop_v[1]
+                                    elif (prop == "player_points_assists"):
+                                        obj.points_assists_price = prop_v[0]
+                                        obj.points_assists_point = prop_v[1]
+                                    elif (prop == "player_points_rebounds_assists"):
+                                        obj.points_rebounds_assists_price = prop_v[0]
+                                        obj.points_rebounds_assists_point = prop_v[1]
+                            obj.save()
+
+        context["player_odds"] = player_odds
     else:
         context["player_odds"] = todays_player_odds
 
@@ -231,6 +236,9 @@ def player_props(request):
 
 def player_props_summary(request, id):
     player = PlayerOdds.objects.get(id = id)
+    print("Player:", player.player.team.team_name, len(player.player.team.team_name))
+    print("HOME:", player.game.home_team.team_name, len(player.game.home_team.team_name) ) 
+    print("AWAY:", player.game.away_team)  
     context = {"player" : player}
 
     return render(request, 'player_props_summary.html', context = context)
