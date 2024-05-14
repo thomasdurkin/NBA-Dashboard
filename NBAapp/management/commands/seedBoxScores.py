@@ -19,14 +19,13 @@ class Command(BaseCommand):
 
             page = requests.get(link)
             soup = BeautifulSoup(page.content, "html.parser")
-
             # Get all games for the day
             try:
                 games = soup.find("div", class_ = "game_summaries").find_all("table", class_= "teams")
                 # Loop through all games to get boxscore link
                 for game in games:
                     boxscore_link = game.find("td", class_ = "gamelink").find("a", href = True)['href']
-
+                    print(base_link+boxscore_link)
                     # Access boxscore
                     page = requests.get(base_link + boxscore_link)
                     time.sleep(2)
@@ -37,7 +36,6 @@ class Command(BaseCommand):
                     team2_text = teams[1].text.strip()
                     team1 = Team.objects.get(team_name = team1_text)
                     team2 = Team.objects.get(team_name = team2_text)
-                       
 
                     # Line Score data is stored in comments so this is a work around
                     comment = soup.find("div", id = 'all_line_score').find(string=lambda text: isinstance(text, Comment))
@@ -50,13 +48,37 @@ class Command(BaseCommand):
                         team1_q2_points = int(data[1].text.strip())
                         team1_q3_points = int(data[2].text.strip())
                         team1_q4_points = int(data[3].text.strip())
-                        team1_total = int(data[4].text.strip())
 
-                        team2_q1_points = int(data[5].text.strip())
-                        team2_q2_points = int(data[6].text.strip())
-                        team2_q3_points = int(data[7].text.strip())
-                        team2_q4_points = int(data[8].text.strip())
-                        team2_total = int(data[9].text.strip())
+                        curr = 4
+                        OT = False
+                        # OT game, calculating actual final game score
+                        if "OT" in data[curr].get("data-stat"):
+                            OT = True
+                            OT_points = 0
+                            while "OT" in data[curr].get("data-stat"):
+                                OT_points += int(data[curr].text.strip())
+                                curr += 1
+                            team1_total = team1_q1_points + team1_q2_points + team1_q3_points + team1_q4_points + OT_points
+                        else:
+                            team1_total = int(data[curr].text.strip())
+                        curr += 1
+                        if OT:
+                            team2_q1_points = int(data[curr].text.strip())
+                            team2_q2_points = int(data[curr+1].text.strip())
+                            team2_q3_points = int(data[curr+2].text.strip())
+                            team2_q4_points = int(data[curr+3].text.strip())
+                            OT_points = 0
+                            curr = curr+4
+                            while "OT" in data[curr].get("data-stat"):
+                                OT_points += int(data[curr].text.strip())
+                                curr += 1
+                            team2_total = team2_q1_points + team2_q2_points + team2_q3_points + team2_q4_points + OT_points
+                        else:
+                            team2_q1_points = int(data[5].text.strip())
+                            team2_q2_points = int(data[6].text.strip())
+                            team2_q3_points = int(data[7].text.strip())
+                            team2_q4_points = int(data[8].text.strip())
+                            team2_total = int(data[9].text.strip())
 
                     # Four Factors data is stored in comments
                     comment = soup.find("div", id = 'all_four_factors').find(string=lambda text: isinstance(text, Comment))
