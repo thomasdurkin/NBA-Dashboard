@@ -7,7 +7,7 @@
     </head>
     <body>
         <h1 class="text-center pt-5">Today's Player Props: {% now "m-d-Y" %}</h1>
-        <div class="mt-5">
+        <div class="mt-5 mb-5">
             {% for game in games %}
             <div class="container rounded-3 mt-1" style="border: 1.5px; border-style:solid; border-color:LightGray;">
                 <div class="row p-2" style="background-color: LightGray">
@@ -21,8 +21,8 @@
                 </div>
 
                 {% for po in player_odds %}
-                    {% if po.game.id == game.id %}
-                    <a href="{% url 'player_props_summary' po.player_id %}">
+                    {% if po.game_id == game.id %}
+                    <a href="{% url 'player_props_summary' po.id %}">
                         <div class="row player p-2 border-bottom" style="background-color: White">
                             {{ po.player.player_name }}
                         </div>

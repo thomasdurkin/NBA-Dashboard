@@ -11,33 +11,43 @@
             <div class="row m-2 text-center">
                 <div class="col-sm">
                     <div><b>Points</b></div>
-                    <div class="rounded-pill p-1 mt-1" style="width: 30%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">27.5</div>
+                    <div class="rounded-pill p-1 mt-1" style="width: 30%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">{{ player.points_point }}</div>
                 </div>
 
-                <div class="col-sm">
-                    <div><b>Threes</b></div>
-                    <div class="rounded-pill p-1 mt-1" style="width: 30%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">2.5</div>
-                </div>
-
+                {% if player.rebounds_point != 0 %}
                 <div class="col-sm">
                     <div><b>Rebounds</b></div>
-                    <div class="rounded-pill p-1 mt-1" style="width: 30%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">9.5</div>
+                    <div class="rounded-pill p-1 mt-1" style="width: 30%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">{{ player.rebounds_point }}</div>
                 </div>
-
+                {% endif %}
+                
+                {% if player.assists_point != 0 %}
                 <div class="col-sm">
                     <div><b>Assists</b></div>
-                    <div class="rounded-pill p-1 mt-1" style="width: 30%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">4.5</div>
+                    <div class="rounded-pill p-1 mt-1" style="width: 30%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">{{ player.assists_point }}</div>
                 </div>
+                {% endif %}
+                
+                {% if player.threes_point != 0 %}
+                <div class="col-sm">
+                    <div><b>Threes</b></div>
+                    <div class="rounded-pill p-1 mt-1" style="width: 30%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">{{ player.threes_point }}</div>
+                </div>
+                {% endif %}
 
+                {% if player.points_assists_point != 0 %}
                 <div class="col-sm">
                     <div><b>Pts + Ast</b></div>
-                    <div class="rounded-pill p-1 mt-1" style="width: 30%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">32.5</div>
+                    <div class="rounded-pill p-1 mt-1" style="width: 30%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">{{ player.points_assists_point }}</div>
                 </div>
+                {% endif %}
 
+                {% if player.points_rebounds_assists_point != 0 %}
                 <div class="col-sm">
                     <div><b>Pts + Ast + Reb</b></div>
-                    <div class="rounded-pill p-1 mt-1" style="width: 30%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">42.5</div>
+                    <div class="rounded-pill p-1 mt-1" style="width: 30%; margin: auto; border: 1.5px; border-style:solid; border-color: LightGray;">{{ player.points_rebounds_assists_point }}</div>
                 </div>
+                {% endif %}
             </div>
         </div>
 
@@ -64,7 +74,11 @@
 
             <div class="checkbox dropbtn rounded-pill mt-1 ps-3 pe-3 p-1" style="border: 1.5px; border-style:solid; border-color: LightGray;">
                 <input type="checkbox" value="">
-                <label for="">vs Cleveland Only</label>
+                {% if player.player.team == player.game.home_team %}
+                    <label for="">vs {{player.game.away_team}}</label>
+                {% else %}
+                    <label for="">vs {{player.game.home_team}}</label>
+                {% endif %}
             </div>
 
             <div>&nbsp;</div>
