@@ -22,7 +22,7 @@
 
                 {% for po in player_odds %}
                     {% if po.game.id == game.id %}
-                    <a href="{% url 'player_props_summary' po.id %}">
+                    <a href="{% url 'player_props_summary' po.player_id %}">
                         <div class="row player p-2 border-bottom" style="background-color: White">
                             {{ po.player.player_name }}
                         </div>

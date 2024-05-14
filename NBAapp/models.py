@@ -72,10 +72,26 @@ class PlayerOdds(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     
     date_time = models.DateTimeField()
-    prop = models.CharField(max_length=40)
+    last_update = models.DateTimeField()
     over_under = models.CharField(max_length=5)
-    price = models.IntegerField()
-    point = models.IntegerField()
+    
+    points_price = models.IntegerField(default=0)
+    points_point = models.FloatField(default=0)
+
+    rebounds_price = models.IntegerField(default=0)
+    rebounds_point = models.FloatField(default=0)
+
+    assists_price = models.IntegerField(default=0)
+    assists_point = models.FloatField(default=0)
+
+    threes_price = models.IntegerField(default=0)
+    threes_point = models.FloatField(default=0)
+
+    points_assists_price = models.IntegerField(default=0)
+    points_assists_point = models.FloatField(default=0)
+
+    points_rebounds_assists_price = models.IntegerField(default=0)
+    points_rebounds_assists_point = models.FloatField(default=0)
 
 
 
