@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):
-        dates = pd.date_range(start = "2024-04-09", end = "2024-04-08")
+        dates = pd.date_range(start = "2024-04-01", end = "2024-04-25")
         base_link = "https://www.basketball-reference.com"
 
         for date in dates:
@@ -25,7 +25,6 @@ class Command(BaseCommand):
                 # Loop through all games to get boxscore link
                 for game in games:
                     boxscore_link = game.find("td", class_ = "gamelink").find("a", href = True)['href']
-                    print(base_link+boxscore_link)
                     # Access boxscore
                     page = requests.get(base_link + boxscore_link)
                     time.sleep(2)

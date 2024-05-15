@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Q
+from django.http import JsonResponse
+from django.core.serializers import serialize
 from .models import GameOdds, Team, BoxScore, PlayerOdds, Player
 from datetime import datetime, timedelta, timezone
 
@@ -105,18 +107,32 @@ def index(request):
 
 def game_summary(request, id):
     game = GameOdds.objects.get(id = id)
+    val = int(request.GET.get('pastGames'))
 
-    home_team_recent = BoxScore.objects.filter(Q(team1=game.home_team) | Q(team2=game.home_team))\
-                                        .order_by('-date')[:5]
-    
-    away_team_recent = BoxScore.objects.filter(Q(team1=game.away_team) | Q(team2=game.away_team))\
-                                        .order_by('-date')[:5]
-    
-    context = {"game" : game,
-               "home_team_recent" : home_team_recent,
-               "away_team_recent" : away_team_recent}
+    # Rendering page and loading chart data
+    if request.method == "GET" and request.headers.get('newSelection'):
+        # Head to Head matchups only
+        chart_data = BoxScore.objects.filter((Q(team1=game.home_team) & Q(team2=game.away_team)) |
+                                             (Q(team1=game.away_team) & Q(team2=game.home_team)))\
+                                            .order_by('-date')[:val]
+        
+        return JsonResponse(serialize('json', chart_data), safe = False)
+    else:
+        home_team_recent = BoxScore.objects.filter(Q(team1=game.home_team) | Q(team2=game.home_team))\
+                                            .order_by('-date')[:5]
+        
+        away_team_recent = BoxScore.objects.filter(Q(team1=game.away_team) | Q(team2=game.away_team))\
+                                            .order_by('-date')[:5]
+        
+        chart_data = BoxScore.objects.filter(Q(team1=game.home_team) | Q(team2=game.home_team))\
+                                            .order_by('-date')[:val]
+        
+        context = {"game" : game,
+                "home_team_recent" : home_team_recent,
+                "away_team_recent" : away_team_recent}
+        
 
-    return render(request, 'game_summary.html', context=context)
+        return render(request, 'game_summary.html', context=context)
 
 
 def player_props(request):
