@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):
-        dates = pd.date_range(start = "2024-05-01", end = "2024-05-13")
+        dates = pd.date_range(start = "2024-04-09", end = "2024-04-08")
         base_link = "https://www.basketball-reference.com"
 
         for date in dates:

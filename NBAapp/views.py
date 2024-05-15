@@ -123,14 +123,15 @@ def player_props(request):
     today = datetime.today()
     tomorrow = today + timedelta(days=1)
 
-    today = today.strftime("%Y-%m-%dT00:00:00Z")
+    today = today.strftime("%Y-%m-%dT04:00:00Z")
     tomorrow = tomorrow.strftime("%Y-%m-%dT04:00:00Z")
 
     todays_games = GameOdds.objects.filter(date_time__range=(today, tomorrow))
 
+    print(today, tomorrow)
     todays_player_odds = PlayerOdds.objects.filter(Q(date_time__range=(today, tomorrow)) & Q(over_under="over"))
     todays_player_odds_cnt = todays_player_odds.count()
-
+    print(todays_player_odds_cnt)
     context = {"games" : todays_games}
 
     if todays_player_odds_cnt == 0:
@@ -206,7 +207,6 @@ def player_props(request):
 
                             if over_under == "under": 
                                 obj.over_under = "under"
-                                print("HEREEEEEEEEE")
                                 for prop, prop_v in over_under_v.items():
                                     if (prop == "player_points"):
                                         obj.points_price = prop_v[0]
@@ -236,9 +236,6 @@ def player_props(request):
 
 def player_props_summary(request, id):
     player = PlayerOdds.objects.get(id = id)
-    print("Player:", player.player.team.team_name, len(player.player.team.team_name))
-    print("HOME:", player.game.home_team.team_name, len(player.game.home_team.team_name) ) 
-    print("AWAY:", player.game.away_team)  
     context = {"player" : player}
 
     return render(request, 'player_props_summary.html', context = context)
