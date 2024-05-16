@@ -84,7 +84,6 @@ def index(request):
                 home_team = Team.objects.get(team_name = home_team)
                 away_team = Team.objects.get(team_name = away_team)
 
-                print(uuid.UUID(json['id']))
                 gameOddsObj = GameOdds(id = uuid.UUID(json['id']),
                                         date_time = date_time,
                                         home_team = home_team,
