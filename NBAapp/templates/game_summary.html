@@ -6,12 +6,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/2.2.1/chartjs-plugin-annotation.min.js"></script>
     </head>
     <body>
-        {% comment %} <h1>{{ team_name1 }} vs {{ team_name2 }}</h1>
-        <div>Load previous games....</div>
-        <div>Add chart to compare past spreads to this game....</div>
-        <div>Add chart to compare past totals to this game....</div>
-        <div>Use odds api to display players</div> {% endcomment %}
-
         <div class="container">
             <div class="text-center pt-5">
                 <h1>Game Summary: {{ game.home_team.team_name }} vs {{ game.away_team.team_name }}</h1>
@@ -156,15 +150,19 @@
             </div>
 
             <div class="container mt-5">
-                <div class="checkbox h2h rounded-pill mt-1 ps-3 pe-3 p-1" style="border: 1.5px; border-style:solid; border-color: LightGray;">
-                    <input type="checkbox" checked="true">
-                        <label>H2H</label>
+                <div class="three-toggle" id="team-toggle">
+                    <input type="radio" class="btn-check" name="options" id="option1" value={{ game.home_team.id }}>
+                    <label class="btn btn-outline-primary" for="option1">{{ game.home_team.team_abbr }}</label>
+                  
+                    <input type="radio" class="btn-check" name="options" id="option2" value="H2H" checked=true>
+                    <label class="btn btn-outline-primary" for="option2">H2H</label>
+                  
+                    <input type="radio" class="btn-check" name="options" id="option3" value={{ game.away_team.id }}>
+                    <label class="btn btn-outline-primary" for="option3">{{ game.away_team.team_abbr }}</label>
                 </div>
 
                 <div class="dropdown-games rounded-pill mt-1 ps-3 pe-3 p-1" style="border: 1.5px; border-style:solid; border-color: LightGray;">
                     <select id="dropdown">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
                         <option value="3">3</option>
                         <option selected="selected" value="5">5</option>
                         <option value="7">7</option>
@@ -183,57 +181,90 @@
 
             <script>
                 window.onload = function() {
-                    var selectedValue = 5;
-                    updateUrl(selectedValue);
-                    fetchData(5);
+                    games = 5;
+                    team = "H2H"
+                    updateUrl(games, team);
+                    fetchData(games, team);
                   };
-
+                
                 document.getElementById('dropdown').addEventListener('change', function() {
-                    var selectedValue = this.value;
-                    updateUrl(selectedValue);
-                    fetchData(selectedValue);
+                    var games = this.value;
+
+                    document.querySelectorAll('.btn-check').forEach(function(btn) {
+                        btn.addEventListener('click', function() {
+                            var team = this.value
+                        });
+                      });
+
+                    updateUrl(games, team);
+                    fetchData(games, team);
                 });
 
-                function updateUrl(selectedValue) {
-                    var newUrl = window.location.pathname + '?pastGames=' + selectedValue;
+                document.querySelectorAll('.btn-check').forEach(function(btn) {
+                    btn.addEventListener('change', function() {
+                      if (this.checked) {
+                        team = this.value;
+                        games = document.getElementById('dropdown').value;
+                        updateUrl(games, team);
+                        fetchData(games, team);
+                      }
+                    });
+                  });
+
+                function updateUrl(games, team) {
+                    var newUrl = window.location.pathname + '?pastGames=' + games + '&team=' + team;
                     window.history.pushState({path: newUrl}, '', newUrl);
                 }
 
-                function fetchData(selectedValue) {
-                    fetch('{{game.id}}?pastGames=' + selectedValue,
+                function fetchData(games, team) {
+                    fetch('{{game.id}}?pastGames=' + games + '&team=' + team,
                         {
                             headers: {"newSelection" : 'True'}
                         })
                           
                     .then(response => response.json())
                     .then(data => {
-                        loadChart(data, selectedValue)
+                        loadChart(data, games)
                     });
                 }
 
                 var myChart;
-                function loadChart(data, selectedValue){
+                function loadChart(data, games){
                     data = JSON.parse(data)
                     // Destroy previous change upon new selection
                     if (myChart){
                         myChart.destroy();
                     }
+
+                    // Setup Chart Title
+                    chartTitleTeam = ""
+                    if (team == "H2H"){
+                        chartTitleTeam = "{{ game.home_team }} vs {{ game.away_team }}"
+                    }
+                    else if (team == {{ game.home_team.id }}){
+                        chartTitleTeam = "{{ game.home_team.team_name }}"
+                    }
+                    else{
+                        chartTitleTeam = "{{ game.away_team.team_name }}"
+                    }
+
+                    // Setup Chart Bars
                     chartData = []
                     chartColors = []
                     chartLabels = []
                     for (var i = data.length - 1; i >= 0; i--){
-                        chartData.push(data[i].fields['team1_total'] * 2);
-                        if (data[i].fields['team1_total'] * 2 < {{ game.over_point }}){
+                        total = data[i].fields['team1_total'] + data[i].fields['team2_total']
+                        chartData.push(total);
+                        if (total < {{ game.over_point }}){
                             chartColors.push('rgba(255, 99, 132, 0.6)');
                         }
                         else{
                             chartColors.push('rgba(75, 192, 192, 0.6)')
                         }
                         chartLabels.push(data[i].fields['date']);
-
                     }
-                    console.log(chartLabels)
 
+                    // Configure Chart Styling/Options
                     const options = {
                         scales: {
                             y: {
@@ -267,7 +298,7 @@
                         data: {
                           labels: chartLabels,
                           datasets: [{
-                            label: '{{game.home_team}} vs {{game.away_team}} last ' + selectedValue,
+                            label: chartTitleTeam + ' last ' + games,
                             data: chartData,
                             backgroundColor: chartColors,
                           }]
@@ -293,9 +324,26 @@
             color:black;
          }
 
-         .h2h, .dropdown-games{
+         .three-toggle, .dropdown-games{
             float: right;
-            margin-right: 30px;
+            margin-right: 20px;
           }
+
+          .btn-group .btn {
+            width: calc(100% / 3);
+            border-radius: 0;
+            padding: 0;
+          }
+          
+          .btn-group .btn:first-child {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+          }
+          
+          .btn-group .btn:last-child {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+          }
+          
     </style>
 </html>

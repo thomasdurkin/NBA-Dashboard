@@ -8,19 +8,22 @@ from datetime import datetime, timedelta, timezone
 import requests
 import pandas as pd
 import uuid
+import datetime
+
+#TODAY = datetime.today()
+TODAY = datetime.datetime(2024, 5, 24)
+TOMORROW = TODAY + timedelta(days=1)
+
 
 # Create your views here.
 def index(request):
-
-    today = datetime.today()
-    tomorrow = today + timedelta(days=1)
-
-    today = today.strftime("%Y-%m-%dT00:00:00Z")
-    tomorrow = tomorrow.strftime("%Y-%m-%dT04:00:00Z")
+    context = {"today" : TODAY}
+    today = TODAY.strftime("%Y-%m-%dT00:00:00Z")
+    tomorrow = TOMORROW.strftime("%Y-%m-%dT04:00:00Z")
 
     todays_games = GameOdds.objects.filter(date_time__range=(today, tomorrow))
     todays_games_cnt = todays_games.count()
-    context = {"games" : todays_games}
+    context["games"] = todays_games
 
     games = []
     if todays_games_cnt == 0:
@@ -108,15 +111,21 @@ def index(request):
 
 def game_summary(request, id):
     game = GameOdds.objects.get(id = id)
-    val = int(request.GET.get('pastGames'))
 
     # Rendering page and loading chart data
     if request.method == "GET" and request.headers.get('newSelection'):
+        num_past_games = int(request.GET.get('pastGames'))
+        team = request.GET.get('team')
+
         # Head to Head matchups only
-        chart_data = BoxScore.objects.filter((Q(team1=game.home_team) & Q(team2=game.away_team)) |
-                                             (Q(team1=game.away_team) & Q(team2=game.home_team)))\
-                                            .order_by('-date')[:val]
-        
+        if team == "H2H":
+            chart_data = BoxScore.objects.filter((Q(team1=game.home_team) & Q(team2=game.away_team)) |
+                                                (Q(team1=game.away_team) & Q(team2=game.home_team)))\
+                                                .order_by('-date')[:num_past_games]
+        else:
+            chart_data = BoxScore.objects.filter((Q(team1=team) | Q(team2=team)))\
+                                                .order_by('-date')[:num_past_games]
+            
         return JsonResponse(serialize('json', chart_data), safe = False)
     else:
         home_team_recent = BoxScore.objects.filter(Q(team1=game.home_team) | Q(team2=game.home_team))\
@@ -126,7 +135,7 @@ def game_summary(request, id):
                                             .order_by('-date')[:5]
         
         chart_data = BoxScore.objects.filter(Q(team1=game.home_team) | Q(team2=game.home_team))\
-                                            .order_by('-date')[:val]
+                                            .order_by('-date')[:5]
         
         context = {"game" : game,
                 "home_team_recent" : home_team_recent,
@@ -137,18 +146,13 @@ def game_summary(request, id):
 
 
 def player_props(request):
-    today = datetime.today()
-    tomorrow = today + timedelta(days=1)
-
-    today = today.strftime("%Y-%m-%dT04:00:00Z")
-    tomorrow = tomorrow.strftime("%Y-%m-%dT04:00:00Z")
+    today = TODAY.strftime("%Y-%m-%dT04:00:00Z")
+    tomorrow = TOMORROW.strftime("%Y-%m-%dT04:00:00Z")
 
     todays_games = GameOdds.objects.filter(date_time__range=(today, tomorrow))
 
-    print(today, tomorrow)
     todays_player_odds = PlayerOdds.objects.filter(Q(date_time__range=(today, tomorrow)) & Q(over_under="over"))
     todays_player_odds_cnt = todays_player_odds.count()
-    print(todays_player_odds_cnt)
     context = {"games" : todays_games}
 
     if todays_player_odds_cnt == 0:
